@@ -1,0 +1,368 @@
+================================================================================
+                            SISTEMA TECHSHOP
+                    Sistema de Tienda Online con Oracle
+================================================================================
+
+INFORMACIÓN GENERAL
+================================================================================
+Nombre del Proyecto: TechShop - Sistema de E-commerce
+Versión: 1.0
+Descripción: Sistema completo de tienda online con carrito de compras, gestión 
+             de usuarios, productos, categorías y facturación automática
+Tecnología: Spring Boot 3.5.3 + Oracle Database 19c
+Puerto: 80
+Autor: Proyecto del curso - Universidad Fidélitas
+Fecha: Diciembre 2024
+
+CARACTERÍSTICAS PRINCIPALES
+================================================================================
+✓ Carrito de compras funcional con facturación automática
+✓ Gestión completa de usuarios con roles y seguridad
+✓ Catálogo de productos con categorías e inventario
+✓ Sistema de diagnóstico integrado para monitoreo
+✓ Herramientas de reparación automática de problemas
+✓ APIs REST para integración y pruebas
+✓ Interfaz web responsiva con Bootstrap
+✓ Base de datos Oracle con optimizaciones específicas
+
+TECNOLOGÍAS UTILIZADAS
+================================================================================
+
+Backend:
+- Spring Boot 3.5.3 (Framework principal)
+- Spring Data JPA (Persistencia de datos)
+- Spring Security (Autenticación y autorización)
+- Spring Web MVC (Controladores web)
+- Hibernate 6.6.18 (ORM)
+
+Base de Datos:
+- Oracle Database 19c (Base de datos principal)
+- HikariCP (Pool de conexiones optimizado)
+- Oracle JDBC Driver (ojdbc8)
+
+Frontend:
+- Thymeleaf (Motor de plantillas)
+- Bootstrap 5.3.7 (Framework CSS)
+- jQuery 3.7.1 (JavaScript)
+- Font Awesome 6.7.2 (Iconos)
+
+Herramientas:
+- Lombok (Reducción de código)
+- Maven (Gestión de dependencias)
+- Spring Boot DevTools (Desarrollo)
+
+REQUISITOS DEL SISTEMA
+================================================================================
+- Java 17 o superior (configurado para Java 24)
+- Oracle Database 19c o superior
+- Maven 3.6 o superior
+- Puerto 80 disponible
+- Mínimo 512MB RAM
+- 2GB espacio en disco
+
+INSTALACIÓN Y CONFIGURACIÓN
+================================================================================
+
+1. PREPARAR ORACLE DATABASE:
+   - Instalar Oracle Database 19c
+   - Crear usuario 'system' con contraseña '1234'
+   - Verificar que el servicio esté ejecutándose en puerto 1521
+
+2. EJECUTAR SCRIPT DE BASE DE DATOS:
+   - Abrir Oracle SQL Developer
+   - Conectar como system/1234@localhost:1521/orcl
+   - Ejecutar el script: src/main/resources/oracle_schema.sql
+   - Verificar que se crearon las tablas y secuencias
+
+3. CONFIGURAR APLICACIÓN:
+   - Clonar o descargar el proyecto
+   - Verificar configuración en src/main/resources/application.properties
+   - Ajustar credenciales Oracle si es necesario
+
+4. COMPILAR Y EJECUTAR:
+   - Abrir terminal en la carpeta del proyecto
+   - Ejecutar: mvn clean compile
+   - Ejecutar: mvn spring-boot:run
+   - Esperar mensaje "Started TiendaApplication"
+
+5. VERIFICAR INSTALACIÓN:
+   - Abrir navegador en: http://localhost:80
+   - Verificar estado: http://localhost:80/api/test/health
+   - Probar diagnóstico: http://localhost:80/api/diagnostico/conexion-completa
+
+ESTRUCTURA DEL PROYECTO
+================================================================================
+
+src/main/java/com/tienda/
+├── controller/          # Controladores REST y MVC
+│   ├── CarritoController.java       # Carrito de compras
+│   ├── CrudMaestroController.java   # Pruebas CRUD
+│   ├── DiagnosticoController.java   # Diagnóstico sistema
+│   ├── ReparacionController.java    # Reparación problemas
+│   ├── SolucionProblemasController.java # Gestión usuarios
+│   └── TestController.java          # Verificaciones básicas
+├── dao/                 # Repositorios de datos
+│   ├── UsuarioDao.java
+│   ├── CategoriaDao.java
+│   ├── ProductoDao.java
+│   ├── RolDao.java
+│   ├── FacturaDao.java
+│   └── VentaDao.java
+├── domain/              # Entidades JPA
+│   ├── Usuario.java
+│   ├── Categoria.java
+│   ├── Producto.java
+│   ├── Rol.java
+│   ├── Factura.java
+│   ├── Venta.java
+│   └── Item.java
+├── service/             # Lógica de negocio
+│   ├── UsuarioService.java
+│   ├── ProductoService.java
+│   ├── CategoriaService.java
+│   ├── ItemService.java
+│   └── impl/            # Implementaciones
+└── ProjectConfig.java   # Configuración seguridad
+
+src/main/resources/
+├── application.properties      # Configuración principal
+├── oracle_schema.sql          # Script base de datos
+├── limpiar_oracle.sql         # Script limpieza
+├── templates/                 # Plantillas Thymeleaf
+├── static/                    # Recursos estáticos
+└── *.md                       # Documentación
+
+MODELO DE DATOS
+================================================================================
+
+TABLAS PRINCIPALES:
+- USUARIO: Usuarios del sistema con autenticación
+- ROL: Roles de seguridad (ADMIN, USER, VENDEDOR)
+- CATEGORIA: Clasificación de productos
+- PRODUCTO: Catálogo con inventario y precios
+- FACTURA: Cabecera de ventas realizadas
+- VENTA: Detalle de productos vendidos
+
+SECUENCIAS ORACLE:
+- USUARIO_SEQ, ROL_SEQ, CATEGORIA_SEQ
+- PRODUCTO_SEQ, FACTURA_SEQ, VENTA_SEQ
+
+RELACIONES:
+- Usuario → Rol (OneToMany)
+- Categoria → Producto (OneToMany)
+- Usuario → Factura (OneToMany)
+- Factura → Venta (OneToMany)
+- Producto → Venta (ManyToOne)
+
+FUNCIONALIDADES PRINCIPALES
+================================================================================
+
+1. CARRITO DE COMPRAS:
+   - Agregar/quitar productos
+   - Modificar cantidades
+   - Calcular totales automáticamente
+   - Procesar facturación
+   - Actualizar inventario
+
+2. GESTIÓN DE USUARIOS:
+   - Registro y autenticación
+   - Roles y permisos
+   - Encriptación de contraseñas
+   - Gestión de sesiones
+
+3. CATÁLOGO DE PRODUCTOS:
+   - Organización por categorías
+   - Control de inventario
+   - Precios con BigDecimal
+   - Imágenes y descripciones
+
+4. SISTEMA DE DIAGNÓSTICO:
+   - Verificación de conexión Oracle
+   - Monitoreo de rendimiento
+   - Estadísticas de base de datos
+   - Detección de problemas
+
+5. HERRAMIENTAS DE MANTENIMIENTO:
+   - Limpieza de datos de prueba
+   - Reparación automática
+   - Verificación de integridad
+   - Reportes de estado
+
+ENDPOINTS PRINCIPALES
+================================================================================
+
+FUNCIONALIDAD WEB:
+GET  /                          # Página principal
+GET  /carrito/listado          # Ver carrito
+GET  /carrito/agregar/{id}     # Agregar producto
+GET  /facturar/carrito         # Procesar compra
+GET  /login                    # Iniciar sesión
+
+APIS DE DIAGNÓSTICO:
+GET  /api/test/health                    # Estado aplicación
+GET  /api/diagnostico/conexion-completa # Diagnóstico completo
+GET  /api/diagnostico/rendimiento        # Pruebas velocidad
+
+APIS DE PRUEBAS:
+GET  /api/crud-maestro/estadisticas     # Estadísticas BD
+GET  /api/crud-maestro/probar-todo      # Pruebas CRUD completas
+GET  /api/crud-maestro/probarCrud[Entidad]Completo # Pruebas específicas
+GET  /api/crud-simple/probar-basico     # Pruebas básicas seguras
+
+APIS DE MONITOREO CONTINUO:
+GET  /api/monitoreo/estado-continuo     # Monitoreo en tiempo real
+GET  /api/monitoreo/operacion-continua  # Operaciones continuas
+GET  /api/monitoreo/resumen-sistema     # Resumen del sistema
+GET  /api/monitoreo/registros-ejecucion # Historial de operaciones
+
+APIS DE MANTENIMIENTO:
+GET  /api/reparacion/verificar-tipos    # Verificar tipos Oracle
+GET  /api/reparacion/corregir-tipos     # Corregir tipos BD
+GET  /api/limpieza/limpiar-datos-prueba # Limpiar datos residuales
+
+APIS DE USUARIOS:
+POST /api/solucion/crear-usuario-admin  # Crear administrador
+PUT  /api/solucion/cambiar-password/{user} # Cambiar contraseña
+POST /api/solucion/validar-login        # Validar credenciales
+
+CONFIGURACIÓN DE SEGURIDAD
+================================================================================
+
+ROLES DISPONIBLES:
+- ADMIN: Acceso completo al sistema
+- VENDEDOR: Gestión de productos y categorías
+- USER: Acceso a carrito y compras
+
+USUARIOS POR DEFECTO:
+- juan/123 (ADMIN, VENDEDOR, USER)
+- rebeca/456 (VENDEDOR, USER)
+- pedro/789 (USER)
+
+ENDPOINTS PÚBLICOS:
+- Página principal y carrito
+- APIs de diagnóstico y pruebas
+- Recursos estáticos (CSS, JS, imágenes)
+
+ENDPOINTS PROTEGIDOS:
+- Gestión de productos (ADMIN)
+- Gestión de usuarios (ADMIN)
+- Reportes (ADMIN)
+- Facturación (USER)
+
+USO DE LA APLICACIÓN
+================================================================================
+
+1. ACCESO WEB:
+   - Abrir: http://localhost:80
+   - Navegar por productos
+   - Agregar al carrito
+   - Iniciar sesión para comprar
+   - Procesar facturación
+
+2. VERIFICACIÓN DEL SISTEMA:
+   - Estado: http://localhost:80/api/test/health
+   - Estadísticas: http://localhost:80/api/crud-maestro/estadisticas
+   - Diagnóstico: http://localhost:80/api/diagnostico/conexion-completa
+
+3. PRUEBAS CRUD:
+   - Básicas: http://localhost:80/api/crud-simple/probar-basico
+   - Completas: http://localhost:80/api/crud-maestro/probar-todo
+
+4. MANTENIMIENTO:
+   - Limpiar datos: http://localhost:80/api/limpieza/limpiar-datos-prueba
+   - Verificar tipos: http://localhost:80/api/reparacion/verificar-tipos
+   - Estado general: http://localhost:80/api/reparacion/estado-aplicacion
+
+SOLUCIÓN DE PROBLEMAS COMUNES
+================================================================================
+
+PROBLEMA: Error de conexión Oracle
+SOLUCIÓN: 
+- Verificar que Oracle esté ejecutándose
+- Comprobar credenciales en application.properties
+- Ejecutar: http://localhost:80/api/reparacion/estado-aplicacion
+
+PROBLEMA: Error 403 Forbidden (SOLUCIONADO)
+SOLUCIÓN:
+- ✅ RESUELTO: Métodos privados cambiados a públicos en CrudMaestroController
+- Todos los endpoints /api/** ahora son accesibles públicamente
+- Verificar que la URL sea correcta
+- Para funciones administrativas, iniciar sesión primero
+
+PROBLEMA: Errores de tipos de datos
+SOLUCIÓN:
+- Ejecutar: http://localhost:80/api/reparacion/corregir-tipos
+- O ejecutar manualmente: src/main/resources/limpiar_oracle.sql
+
+PROBLEMA: Datos de prueba duplicados
+SOLUCIÓN:
+- Ejecutar: http://localhost:80/api/limpieza/limpiar-datos-prueba
+- Verificar estado: http://localhost:80/api/limpieza/verificar-estado
+
+PROBLEMA: Rendimiento lento
+SOLUCIÓN:
+- Verificar: http://localhost:80/api/diagnostico/rendimiento
+- Revisar configuración HikariCP en application.properties
+- Verificar memoria disponible del sistema
+
+PROBLEMA: Aplicación no inicia
+SOLUCIÓN:
+- Verificar que Oracle esté ejecutándose
+- Comprobar que el puerto 80 esté disponible
+- Revisar logs de Spring Boot para errores específicos
+- Verificar que las tablas existan en Oracle
+
+MANTENIMIENTO RECOMENDADO
+================================================================================
+
+DIARIO:
+- Verificar estado: /api/test/health
+- Revisar estadísticas: /api/crud-maestro/estadisticas
+- Monitorear rendimiento: /api/diagnostico/rendimiento
+
+SEMANAL:
+- Limpiar datos de prueba: /api/limpieza/limpiar-datos-prueba
+- Ejecutar pruebas completas: /api/crud-maestro/probar-todo
+- Verificar integridad: /api/reparacion/verificar-tipos
+
+MENSUAL:
+- Ejecutar script completo: src/main/resources/limpiar_oracle.sql
+- Revisar logs de aplicación
+- Actualizar estadísticas de Oracle
+- Backup de base de datos
+
+MÉTRICAS DE RENDIMIENTO ESPERADAS
+================================================================================
+- Tiempo de inicio: < 30 segundos
+- Conexión Oracle: < 1000ms
+- Consultas simples: < 100ms
+- CRUD completo: < 10000ms
+- Carga de página: < 2000ms
+- Disponibilidad: > 99.5%
+
+DOCUMENTACIÓN ADICIONAL
+================================================================================
+- DOCUMENTACION_COMPLETA_SISTEMA.md: Documentación técnica completa
+- SOLUCION_PROBLEMAS.md: Guía detallada de solución de problemas
+- SOLUCION_ERRORES_CRUD.md: Solución específica de errores CRUD
+- CONTROLADORES_ESENCIALES.md: Detalle de controladores
+- CRUD_API_Documentation.md: Documentación de APIs
+
+CONTACTO Y SOPORTE
+================================================================================
+Para soporte técnico:
+1. Revisar documentación en src/main/resources/*.md
+2. Usar endpoints de diagnóstico para identificar problemas
+3. Consultar logs de Spring Boot para errores específicos
+4. Verificar configuración Oracle y conectividad
+
+LICENCIA Y CRÉDITOS
+================================================================================
+Proyecto desarrollado para fines educativos
+Universidad Fidélitas - Curso de Lenguajes de Base de Datos
+Tecnologías: Spring Boot, Oracle Database, Bootstrap, Thymeleaf
+Versión: 1.0 - Diciembre 2024
+
+================================================================================
+                        FIN DEL ARCHIVO LEAME.txt
+================================================================================

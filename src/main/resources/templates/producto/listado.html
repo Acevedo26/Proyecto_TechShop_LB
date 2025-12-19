@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>VirtualLearning</title>
+
+    </head>
+    <audio controls>
+        <source src="../../static/audios/musica.mp3" type="audio/mpeg">
+            Your browser does not support the <code>audio</code> tag.
+    </audio>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+
+        <section th:replace="~{producto/fragmentos :: botonesAgregar}"></section>
+        <section th:replace="~{producto/fragmentos :: agregarProducto}"></section>
+        <section th:replace="~{producto/fragmentos :: listadoProductos}"></section>
+
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+        <h1>Video de YouTube</h1>
+
+        <!-- Tu iframe de YouTube -->
+        <iframe width="1236" height="695" 
+                src="https://www.youtube.com/embed/rK6hcDgdRpk" 
+                title="Himno Nacional de Costa Rica con letra" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+        </iframe>
+    </body>
+</html>

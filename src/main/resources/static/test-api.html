@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API - Sistema TechShop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .loading {
+            color: #007bff;
+            font-style: italic;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-size: 12px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Test API - Sistema TechShop Oracle</h1>
+            <p>Panel de pruebas para validar el funcionamiento del sistema</p>
+        </div>
+
+        <div class="section">
+            <h3>📊 Estado del Sistema</h3>
+            <div class="button-group">
+                <button onclick="testEndpoint('/api/estado-sistema/dashboard', 'dashboard-result')">Dashboard Completo</button>
+                <button onclick="testEndpoint('/api/estado-sistema/salud', 'salud-result')">Verificar Salud</button>
+                <button onclick="testEndpoint('/api/estado-sistema/metricas', 'metricas-result')">Métricas</button>
+                <button onclick="testEndpoint('/api/estado-sistema/resumen-ejecutivo', 'ejecutivo-result')">Resumen Ejecutivo</button>
+            </div>
+            <div id="dashboard-result" class="result" style="display:none;"></div>
+            <div id="salud-result" class="result" style="display:none;"></div>
+            <div id="metricas-result" class="result" style="display:none;"></div>
+            <div id="ejecutivo-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🔄 Monitoreo Continuo</h3>
+            <div class="button-group">
+                <button onclick="testEndpoint('/api/monitoreo/ejecutar-continuo', 'monitoreo-result')">Ejecutar Monitoreo</button>
+                <button onclick="testEndpoint('/api/monitoreo/historial', 'historial-result')">Ver Historial</button>
+                <button onclick="testEndpoint('/api/monitoreo/resumen-estabilidad', 'estabilidad-result')">Resumen Estabilidad</button>
+            </div>
+            <div id="monitoreo-result" class="result" style="display:none;"></div>
+            <div id="historial-result" class="result" style="display:none;"></div>
+            <div id="estabilidad-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 Pruebas del Sistema</h3>
+            <div class="button-group">
+                <button onclick="testEndpoint('/api/pruebas-sistema/validacion-completa', 'validacion-result')">Validación Completa</button>
+                <button onclick="testEndpoint('/api/pruebas-sistema/informacion-tablas', 'tablas-result')">Información Tablas</button>
+                <button onclick="testEndpoint('/api/pruebas-sistema/prueba-transacciones', 'transacciones-result')">Prueba Transacciones</button>
+            </div>
+            <div id="validacion-result" class="result" style="display:none;"></div>
+            <div id="tablas-result" class="result" style="display:none;"></div>
+            <div id="transacciones-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>📋 CRUD Maestro</h3>
+            <div class="button-group">
+                <button onclick="testEndpoint('/api/crud-maestro/probar-todo', 'crud-todo-result')">Probar Todo CRUD</button>
+                <button onclick="testEndpoint('/api/crud-maestro/estadisticas', 'crud-stats-result')">Estadísticas</button>
+                <button onclick="testEndpoint('/api/crud-maestro/probarCrudUsuarioCompleto', 'crud-usuario-result')">CRUD Usuario</button>
+                <button onclick="testEndpoint('/api/crud-maestro/probarCrudCategoriaCompleto', 'crud-categoria-result')">CRUD Categoría</button>
+            </div>
+            <div id="crud-todo-result" class="result" style="display:none;"></div>
+            <div id="crud-stats-result" class="result" style="display:none;"></div>
+            <div id="crud-usuario-result" class="result" style="display:none;"></div>
+            <div id="crud-categoria-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🔄 Monitoreo Automático</h3>
+            <div class="button-group">
+                <button id="auto-monitor-btn" onclick="toggleAutoMonitor()">Iniciar Monitoreo Automático</button>
+                <button onclick="clearAllResults()">Limpiar Resultados</button>
+            </div>
+            <div id="auto-monitor-status" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        let autoMonitorInterval = null;
+        let monitorCount = 0;
+
+        async function testEndpoint(url, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result loading';
+            resultDiv.innerHTML = '<div class="loading">🔄 Ejecutando prueba...</div>';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                const isSuccess = data.status === 'SUCCESS';
+                resultDiv.className = isSuccess ? 'result success' : 'result error';
+                
+                const statusIcon = isSuccess ? '✅' : '❌';
+                const timestamp = new Date().toLocaleTimeString();
+                
+                resultDiv.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>${statusIcon} ${url}</strong> 
+                        <span style="float: right; font-size: 12px;">${timestamp}</span>
+                    </div>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>❌ Error en ${url}</strong>
+                        <span style="float: right; font-size: 12px;">${new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <pre>Error: ${error.message}</pre>
+                `;
+            }
+        }
+
+        function toggleAutoMonitor() {
+            const btn = document.getElementById('auto-monitor-btn');
+            const statusDiv = document.getElementById('auto-monitor-status');
+            
+            if (autoMonitorInterval) {
+                // Detener monitoreo
+                clearInterval(autoMonitorInterval);
+                autoMonitorInterval = null;
+                btn.textContent = 'Iniciar Monitoreo Automático';
+                btn.style.background = '#007bff';
+                statusDiv.style.display = 'none';
+            } else {
+                // Iniciar monitoreo
+                btn.textContent = 'Detener Monitoreo Automático';
+                btn.style.background = '#dc3545';
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'result';
+                monitorCount = 0;
+                
+                autoMonitorInterval = setInterval(async () => {
+                    monitorCount++;
+                    statusDiv.innerHTML = `
+                        <div><strong>🔄 Monitoreo Automático Activo</strong></div>
+                        <div>Ejecución #${monitorCount} - ${new Date().toLocaleTimeString()}</div>
+                        <div style="margin-top: 10px;">Ejecutando verificaciones...</div>
+                    `;
+                    
+                    try {
+                        // Ejecutar múltiples verificaciones
+                        const [salud, dashboard, monitoreo] = await Promise.all([
+                            fetch('/api/estado-sistema/salud').then(r => r.json()),
+                            fetch('/api/estado-sistema/dashboard').then(r => r.json()),
+                            fetch('/api/monitoreo/ejecutar-continuo').then(r => r.json())
+                        ]);
+                        
+                        const allSuccess = salud.status === 'SUCCESS' && 
+                                         dashboard.status === 'SUCCESS' && 
+                                         monitoreo.status === 'SUCCESS';
+                        
+                        statusDiv.className = allSuccess ? 'result success' : 'result error';
+                        statusDiv.innerHTML = `
+                            <div><strong>${allSuccess ? '✅' : '❌'} Monitoreo Automático</strong></div>
+                            <div>Ejecución #${monitorCount} - ${new Date().toLocaleTimeString()}</div>
+                            <div style="margin-top: 10px;">
+                                <span class="status-indicator ${salud.sistemaOK ? 'status-success' : 'status-error'}"></span>Salud: ${salud.sistemaOK ? 'OK' : 'ERROR'}<br>
+                                <span class="status-indicator ${dashboard.status === 'SUCCESS' ? 'status-success' : 'status-error'}"></span>Dashboard: ${dashboard.status}<br>
+                                <span class="status-indicator ${monitoreo.status === 'SUCCESS' ? 'status-success' : 'status-error'}"></span>Monitoreo: ${monitoreo.status}
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px;">
+                                Próxima verificación en 30 segundos...
+                            </div>
+                        `;
+                    } catch (error) {
+                        statusDiv.className = 'result error';
+                        statusDiv.innerHTML = `
+                            <div><strong>❌ Error en Monitoreo Automático</strong></div>
+                            <div>Ejecución #${monitorCount} - ${new Date().toLocaleTimeString()}</div>
+                            <div style="margin-top: 10px;">Error: ${error.message}</div>
+                        `;
+                    }
+                }, 30000); // Cada 30 segundos
+                
+                // Ejecutar inmediatamente la primera vez
+                setTimeout(() => {
+                    document.querySelector('#auto-monitor-status').click();
+                }, 100);
+            }
+        }
+
+        function clearAllResults() {
+            const results = document.querySelectorAll('.result');
+            results.forEach(result => {
+                result.style.display = 'none';
+                result.innerHTML = '';
+            });
+        }
+
+        // Ejecutar verificación inicial al cargar la página
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testEndpoint('/api/estado-sistema/salud', 'salud-result');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
